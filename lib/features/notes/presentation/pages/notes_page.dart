@@ -27,6 +27,7 @@ class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white.withOpacity(0.8),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
