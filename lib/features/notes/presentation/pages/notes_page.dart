@@ -27,7 +27,7 @@ class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white.withOpacity(0.9), // Match the light background
+      backgroundColor: Colors.white.withOpacity(0.9),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -56,7 +56,7 @@ class _NotesPageState extends State<NotesPage> {
             Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.search, color: Colors.black),
+                  icon: Icon(Icons.search, color: Colors.green),
                   onPressed: () {
                     showSearch(
                       context: context,
@@ -64,7 +64,7 @@ class _NotesPageState extends State<NotesPage> {
                     );
                   },
                 ),
-                Icon(Icons.more_vert, color: Colors.black),
+                Icon(Icons.more_vert, color: Colors.green),
               ],
             ),
           ],
