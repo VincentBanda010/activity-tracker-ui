@@ -22,14 +22,17 @@ class NoteCard extends StatelessWidget {
     final notesProvider = Provider.of<NotesProvider>(context, listen: false);
 
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      color: Colors.white,
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 4, // Optional: Adds a shadow to make the card stand out
       child: ListTile(
         title: Text(
           note.title,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
         ),
         subtitle: Column(
@@ -40,11 +43,18 @@ class NoteCard extends StatelessWidget {
               note.content,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
             ),
             SizedBox(height: 8),
             Text(
               'Date: $formattedDate',
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+              ),
             ),
           ],
         ),

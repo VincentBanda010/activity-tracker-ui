@@ -39,8 +39,20 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     final notesProvider = Provider.of<NotesProvider>(context, listen: false);
 
     return Scaffold(
+      backgroundColor: Colors.white.withOpacity(0.8),
       appBar: AppBar(
-        title: Text(isEditing ? 'Edit Note' : 'Add Note'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          isEditing ? 'Edit Note' : 'Add Note',
+          style: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.green,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: Padding(
         padding: EdgeInsets.all(16),
@@ -48,9 +60,13 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
           key: _formKey,
           child: Column(
             children: [
+              // Title TextFormField
               TextFormField(
                 initialValue: _title,
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  border: OutlineInputBorder(), // Added border for better UI
+                ),
                 maxLength: 50,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -62,25 +78,29 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
                   _title = value!.trim();
                 },
               ),
-              SizedBox(height: 16),
-              Expanded(
-                child: TextFormField(
-                  initialValue: _content,
-                  decoration: InputDecoration(labelText: 'Content'),
-                  maxLines: null,
-                  expands: true,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Content is required.';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _content = value!.trim();
-                  },
+              SizedBox(height: 8), // Small margin after Title
+
+              // Content TextFormField
+              TextFormField(
+                initialValue: _content,
+                decoration: InputDecoration(
+                  labelText: 'Content',
+                  border: OutlineInputBorder(), // Added border for consistency
                 ),
+                maxLines: 5, // Set a reasonable number of lines
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Content is required.';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _content = value!.trim();
+                },
               ),
-              SizedBox(height: 16),
+              SizedBox(height: 16), // Margin before the button
+
+              // Submit Button
               ElevatedButton(
                 onPressed: () async {
                   final isValid = _formKey.currentState?.validate();
@@ -99,6 +119,10 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
                   }
                 },
                 child: Text(isEditing ? 'Update' : 'Add'),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  textStyle: TextStyle(fontSize: 16),
+                ),
               ),
             ],
           ),

@@ -76,7 +76,11 @@ class _NotesPageState extends State<NotesPage> {
             ),
           );
         },
-        child: Icon(Icons.add),
+        backgroundColor: Colors.green,
+        child: Icon(
+            Icons.add,
+            color: Colors.white,
+        ),
       ),
     );
   }
