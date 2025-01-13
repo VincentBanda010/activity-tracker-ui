@@ -36,7 +36,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.noteId != null;
-    final notesProvider = Provider.of<NotesProvider>(context, listen: false);
+    final notesProvider = Provider.of<NotesProvider>(context, listen: false); // Provider usage
 
     return Scaffold(
       backgroundColor: Colors.white.withOpacity(0.8),
@@ -65,7 +65,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
                 initialValue: _title,
                 decoration: InputDecoration(
                   labelText: 'Title',
-                  border: OutlineInputBorder(), // Added border for better UI
+                  border: OutlineInputBorder(),
                 ),
                 maxLength: 50,
                 validator: (value) {
@@ -85,7 +85,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
                 initialValue: _content,
                 decoration: InputDecoration(
                   labelText: 'Content',
-                  border: OutlineInputBorder(), // Added border for consistency
+                  border: OutlineInputBorder(),
                 ),
                 maxLines: 5, // Set a reasonable number of lines
                 validator: (value) {
@@ -98,7 +98,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
                   _content = value!.trim();
                 },
               ),
-              SizedBox(height: 16), // Margin before the button
+              SizedBox(height: 16),
 
               // Submit Button
               ElevatedButton(
