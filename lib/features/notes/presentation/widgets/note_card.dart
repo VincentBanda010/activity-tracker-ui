@@ -23,7 +23,7 @@ class NoteCard extends StatelessWidget {
 
     return Card(
       color: Colors.white,
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4, // Optional: Adds a shadow to make the card stand out
       child: ListTile(

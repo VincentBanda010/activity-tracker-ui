@@ -1,3 +1,5 @@
+// lib/features/notes/presentation/pages/notes_page.dart
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +27,7 @@ class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100], // Match the light background
+      backgroundColor: Colors.white.withOpacity(0.8), // Match the light background
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -37,18 +39,25 @@ class _NotesPageState extends State<NotesPage> {
                 Text(
                   'All notes',
                   style: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Colors.green,
                   ),
                 ),
-                Icon(Icons.arrow_drop_down, color: Colors.black),
               ],
             ),
             Row(
               children: [
-                Icon(Icons.search, color: Colors.black),
-                SizedBox(width: 16),
+                IconButton(
+                  icon: Icon(Icons.search, color: Colors.black),
+                  onPressed: () {
+                    showSearch(
+                      context: context,
+                      delegate: NotesSearchDelegate(notesProvider),
+                    );
+                  },
+                ),
                 Icon(Icons.more_vert, color: Colors.black),
               ],
             ),
@@ -81,7 +90,9 @@ class _NotesPageState extends State<NotesPage> {
               children: [
                 SizedBox(height: 16),
                 Text(
-                  '${provider.notes.length} notes',
+                  provider.notes.length == 1
+                      ? '1 note'
+                      : '${provider.notes.length} notes',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey[600],
@@ -110,25 +121,78 @@ class _NotesPageState extends State<NotesPage> {
             ),
           );
         },
-        backgroundColor: Colors.yellow[700], // Matches the FAB in the image
+        backgroundColor: Colors.green,
         child: Icon(Icons.add, color: Colors.white),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.note, color: Colors.black),
-            label: 'Notes',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.check_box, color: Colors.black),
-            label: 'To do',
-          ),
-        ],
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
-        backgroundColor: Colors.white,
-        elevation: 10,
+    );
+  }
+}
+
+class NotesSearchDelegate extends SearchDelegate {
+  final NotesProvider notesProvider;
+
+  NotesSearchDelegate(this.notesProvider);
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
       ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    notesProvider.searchNotes(query);
+    return Consumer<NotesProvider>(
+      builder: (context, provider, child) {
+        if (provider.notes.isEmpty) {
+          return Center(child: Text('No notes found.'));
+        }
+        return ListView.builder(
+          itemCount: provider.notes.length,
+          itemBuilder: (context, index) {
+            final note = provider.notes[index];
+            return NoteCard(note: note);
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    notesProvider.searchNotes(query);
+    return Consumer<NotesProvider>(
+      builder: (context, provider, child) {
+        return ListView.builder(
+          itemCount: provider.notes.length,
+          itemBuilder: (context, index) {
+            final note = provider.notes[index];
+            return ListTile(
+              title: Text(note.title),
+              onTap: () {
+                query = note.title;
+                showResults(context);
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

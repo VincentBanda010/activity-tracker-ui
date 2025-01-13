@@ -1,13 +1,10 @@
-// lib/features/notes/presentation/providers/notes_provider.dart
-
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
-
 import '../../domain/entities/note.dart';
-import '../../domain/usecases/add_note.dart';
-import '../../domain/usecases/delete_note.dart';
 import '../../domain/usecases/get_notes.dart';
+import '../../domain/usecases/add_note.dart';
 import '../../domain/usecases/update_note.dart';
+import '../../domain/usecases/delete_note.dart';
+import '../../domain/usecases/search_notes.dart';
 
 class NotesProvider with ChangeNotifier {
   final GetNotes getNotesUseCase;
@@ -15,7 +12,8 @@ class NotesProvider with ChangeNotifier {
   final UpdateNote updateNoteUseCase;
   final DeleteNote deleteNoteUseCase;
 
-  List<Note> _notes = [];
+  List<Note> _allNotes = [];
+  List<Note> _filteredNotes = [];
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -26,17 +24,20 @@ class NotesProvider with ChangeNotifier {
     required this.deleteNoteUseCase,
   });
 
-  List<Note> get notes => _notes;
+  // Getters
+  List<Note> get notes => _filteredNotes;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
+  // Fetch all notes
   Future<void> fetchNotes() async {
     _isLoading = true;
+    _errorMessage = null; // Clear any previous errors
     notifyListeners();
 
     try {
-      _notes = await getNotesUseCase();
-      _errorMessage = null;
+      _allNotes = await getNotesUseCase();
+      _filteredNotes = _allNotes;
     } catch (e) {
       _errorMessage = 'Failed to load notes';
     }
@@ -45,31 +46,68 @@ class NotesProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Search notes by query
+  void searchNotes(String query) {
+    final searchNotesUseCase = SearchNotes(_allNotes);
+    _filteredNotes = searchNotesUseCase(query);
+    notifyListeners();
+  }
+
+  // Add a new note
   Future<void> addNote(String title, String content) async {
-    final note = Note(
-      id: Uuid().v4(),
-      title: title,
-      content: content,
-      date: DateTime.now(),
-    );
-    await addNoteUseCase(note);
-    await fetchNotes();
+    try {
+      final newNote = Note(
+        id: DateTime.now().toString(),
+        title: title,
+        content: content,
+        date: DateTime.now(),
+      );
+      await addNoteUseCase(newNote);
+      _allNotes.add(newNote);
+      _filteredNotes = _allNotes; // Refresh filtered notes
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = 'Failed to add note';
+      notifyListeners();
+    }
   }
 
+  // Update an existing note
   Future<void> updateNote(String id, String title, String content) async {
-    final note = _notes.firstWhere((note) => note.id == id);
-    final updatedNote = Note(
-      id: id,
-      title: title,
-      content: content,
-      date: DateTime.now(),
-    );
-    await updateNoteUseCase(updatedNote);
-    await fetchNotes();
+    try {
+      final updatedNote = Note(
+        id: id,
+        title: title,
+        content: content,
+        date: DateTime.now(),
+      );
+      await updateNoteUseCase(updatedNote);
+
+      // Update the local list
+      final index = _allNotes.indexWhere((note) => note.id == id);
+      if (index != -1) {
+        _allNotes[index] = updatedNote;
+      }
+      _filteredNotes = _allNotes; // Refresh filtered notes
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = 'Failed to update note';
+      notifyListeners();
+    }
   }
 
+  // Delete a note
   Future<void> deleteNote(String id) async {
-    await deleteNoteUseCase(id);
-    await fetchNotes();
+    try {
+      await deleteNoteUseCase(id);
+
+      // Remove from the local list
+      _allNotes.removeWhere((note) => note.id == id);
+      _filteredNotes = _allNotes; // Refresh filtered notes
+      notifyListeners();
+    } catch (e) {
+      _errorMessage = 'Failed to delete note';
+      notifyListeners();
+    }
   }
 }
