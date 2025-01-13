@@ -70,11 +70,12 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     final notesProvider = Provider.of<NotesProvider>(context, listen: false);
 
     return Scaffold(
+      backgroundColor: Colors.white.withOpacity(0.9),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.green),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -82,9 +83,10 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
         title: Text(
           isEditing ? 'Edit Note' : 'Add Note',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 24,
+            fontFamily: 'Arial',
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.green,
           ),
         ),
         centerTitle: true,
