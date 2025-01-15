@@ -32,7 +32,7 @@ class NotesProvider with ChangeNotifier {
   // Fetch all notes
   Future<void> fetchNotes() async {
     _isLoading = true;
-    _errorMessage = null; // Clear any previous errors
+    _errorMessage = null;
     notifyListeners();
 
     try {
@@ -64,7 +64,7 @@ class NotesProvider with ChangeNotifier {
       );
       await addNoteUseCase(newNote);
       _allNotes.add(newNote);
-      _filteredNotes = _allNotes; // Refresh filtered notes
+      _filteredNotes = _allNotes;
       notifyListeners();
     } catch (e) {
       _errorMessage = 'Failed to add note';
@@ -88,7 +88,7 @@ class NotesProvider with ChangeNotifier {
       if (index != -1) {
         _allNotes[index] = updatedNote;
       }
-      _filteredNotes = _allNotes; // Refresh filtered notes
+      _filteredNotes = _allNotes;
       notifyListeners();
     } catch (e) {
       _errorMessage = 'Failed to update note';
@@ -103,7 +103,7 @@ class NotesProvider with ChangeNotifier {
 
       // Remove from the local list
       _allNotes.removeWhere((note) => note.id == id);
-      _filteredNotes = _allNotes; // Refresh filtered notes
+      _filteredNotes = _allNotes;
       notifyListeners();
     } catch (e) {
       _errorMessage = 'Failed to delete note';

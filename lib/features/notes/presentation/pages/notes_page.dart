@@ -94,7 +94,7 @@ class _NotesPageState extends State<NotesPage> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 16),
+                SizedBox(height: 4),
                 Text(
                   provider.notes.length == 1
                       ? '1 note'
@@ -104,7 +104,7 @@ class _NotesPageState extends State<NotesPage> {
                     color: Colors.grey[600],
                   ),
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: 4),
                 Expanded(
                   child: ListView.builder(
                     itemCount: provider.notes.length,
